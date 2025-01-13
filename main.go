@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	database "github.com/simpleshaik1/restuarant-management/database"
 	middleware "github.com/simpleshaik1/restuarant-management/middleware"
 	routes "github.com/simpleshaik1/restuarant-management/routes"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
-	"net/http"
 	"os"
 )
 
