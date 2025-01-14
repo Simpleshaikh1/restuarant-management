@@ -11,12 +11,12 @@ import (
 	"time"
 )
 
-var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
+var mmenuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
 
 func GetMenus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		result, err := menuCollection.Find(context.TODO(), bson.M{})
+		result, err := mmenuCollection.Find(context.TODO(), bson.M{})
 		defer cancel()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error Occured while listing the menu item"})

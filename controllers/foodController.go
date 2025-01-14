@@ -15,7 +15,7 @@ import (
 )
 
 var foodCollection *mongo.Collection = database.OpenCollection(database.Client, "food")
-var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
+var MenuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
 var validate = validator.New()
 
 func GetFoods() gin.HandlerFunc {
@@ -57,7 +57,7 @@ func CreateFood() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Error()})
 			return
 		}
-		err := menuCollection.FindOne(ctx, bson.M{"menu_id": food.Menu_id}).Decode(&menu)
+		err := MenuCollection.FindOne(ctx, bson.M{"menu_id": food.Menu_id}).Decode(&menu)
 		if err != nil {
 			msg := fmt.Sprintf("Menu was not found")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
