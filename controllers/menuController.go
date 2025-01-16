@@ -87,6 +87,10 @@ func CreateMenus() gin.HandlerFunc {
 	}
 }
 
+func inTimeSpan(startTime time.Time, endTime time.Time, check time.Time) bool {
+	return startTime.After(time.Now()) && endTime.After(startTime)
+}
+
 func UpdateMenus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
