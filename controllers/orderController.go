@@ -76,11 +76,11 @@ func UpdateOrder() gin.HandlerFunc {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Order Was not found"})
 				return
 			}
-			updateObj = append(updateObj, bson.E{"order", order.Table_id})
+			updateObj = append(updateObj, bson.E{Key: "order", Value: order.Table_id})
 		}
 
 		order.Updated_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-		updateObj = append(updateObj, bson.E{"order", order.Updated_At})
+		updateObj = append(updateObj, bson.E{Key: "order", Value: order.Updated_At})
 
 		upsert := true
 		filter := bson.M{"order_id": orderId}
