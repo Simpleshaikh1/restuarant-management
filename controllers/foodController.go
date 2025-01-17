@@ -52,7 +52,7 @@ func GetFoods() gin.HandlerFunc {
 		matchStage := bson.D{{"$match", bson.D{{}}}}
 		groupStage := bson.D{
 			{
-				"$group", bson.D{
+				"$group", bson.D{``
 					{"_id", bson.D{
 						{"_id", "nul"},
 					}},
