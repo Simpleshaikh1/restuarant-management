@@ -17,14 +17,14 @@ import (
 	"time"
 )
 
-var mmenuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
+var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
 
 //var validate = validator.New()
 
 func GetMenus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		result, err := mmenuCollection.Find(context.TODO(), bson.M{})
+		result, err := menuCollection.Find(context.TODO(), bson.M{})
 		defer cancel()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error Occured while listing the menu item"})
@@ -44,7 +44,7 @@ func GetMenu() gin.HandlerFunc {
 		menuId := c.Param("menu_id")
 		var menu models.Menu
 
-		err := mmenuCollection.FindOne(ctx, bson.M{"menu_id": menuId}).Decode(&menu)
+		err := menuCollection.FindOne(ctx, bson.M{"menu_id": menuId}).Decode(&menu)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": "Error occurred fetching the menu"})
 		}
@@ -74,7 +74,7 @@ func CreateMenus() gin.HandlerFunc {
 		menu.ID = primitive.NewObjectID()
 		menu.Menu_id = menu.ID.Hex()
 
-		result, insertErr := MenuCollection.InsertOne(ctx, menu)
+		result, insertErr := menuCollection.InsertOne(ctx, menu)
 		if insertErr != nil {
 			msg := fmt.Sprintf("Error inserting new menu")
 			c.JSON(http.StatusBadRequest, gin.H{"error": msg})
@@ -136,7 +136,7 @@ func UpdateMenus() gin.HandlerFunc {
 				Upsert: &upsert,
 			}
 
-			result, err := MenuCollection.UpdateOne(
+			result, err := menuCollection.UpdateOne(
 				ctx,
 				filter,
 				bson.D{
