@@ -166,13 +166,13 @@ func UpdateFood() gin.HandlerFunc {
 		var updateObj primitive.D
 
 		if food.Name != nil {
-			updateObj = append(updateObj, bson.E{"name", food.Name})
+			updateObj = append(updateObj, bson.E{Key: "name", Value: food.Name})
 		}
 		if food.Price != nil {
-			updateObj = append(updateObj, bson.E{"price", food.Price})
+			updateObj = append(updateObj, bson.E{Key: "price", Value: food.Price})
 		}
 		if food.Food_image != nil {
-			updateObj = append(updateObj, bson.E{"food_image", food.Food_image})
+			updateObj = append(updateObj, bson.E{Key: "food_image", Value: food.Food_image})
 		}
 		if food.Menu_id != nil {
 			err := menuCollection.FindOne(ctx, bson.M{"menu_id": food.Menu_id}).Decode(&menu)
@@ -182,10 +182,10 @@ func UpdateFood() gin.HandlerFunc {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 				return
 			}
-			updateObj = append(updateObj, bson.E{"menu_id", food.Price})
+			updateObj = append(updateObj, bson.E{Key: "menu_id", Value: food.Price})
 		}
 		food.UpdatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-		updateObj = append(updateObj, bson.E{"updated_at", food.UpdatedAt})
+		updateObj = append(updateObj, bson.E{Key: "updated_at", Value: food.UpdatedAt})
 
 		upsert := true
 		filter := bson.D{{"food_id", foodId}}
