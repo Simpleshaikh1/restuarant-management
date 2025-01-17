@@ -19,6 +19,7 @@ import (
 )
 
 var foodCollection *mongo.Collection = database.OpenCollection(database.Client, "food")
+var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
 var validate = validator.New()
 
 func round(num float64) int {
@@ -52,7 +53,7 @@ func GetFoods() gin.HandlerFunc {
 		matchStage := bson.D{{"$match", bson.D{{}}}}
 		groupStage := bson.D{
 			{
-				"$group", bson.D{``
+				"$group", bson.D{
 					{"_id", bson.D{
 						{"_id", "nul"},
 					}},

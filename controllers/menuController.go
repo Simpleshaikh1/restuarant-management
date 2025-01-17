@@ -7,17 +7,14 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	//"github.com/go-playground/validator/v10"
-	"github.com/simpleshaik1/restuarant-management/database"
 	"github.com/simpleshaik1/restuarant-management/models"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"net/http"
 	"time"
 )
 
-var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
+//var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
 
 //var validate = validator.New()
 
