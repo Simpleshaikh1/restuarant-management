@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/simpleshaik1/restuarant-management/database"
 	"github.com/simpleshaik1/restuarant-management/models"
@@ -15,6 +16,7 @@ import (
 )
 
 var orderCollection *mongo.Collection = database.OpenCollection(database.Client, "order")
+var tableCollection *mongo.Collection = database.OpenCollection(database.Client, "tables")
 
 func GetOrders() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -51,6 +53,44 @@ func GetOrder() gin.HandlerFunc {
 func CreateOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		var table models.Table
+		var order models.Order
+
+		if err := c.BindJSON(&table); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		validationErr := validate.Struct(order)
+
+		if validationErr != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Error()})
+			return
+		}
+
+		if order.Table_id != nil {
+			err := tableCollection.FindOne(ctx, bson.M{"table_id": order.Table_id}).Decode(&table)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Table was not found"})
+				return
+			}
+		}
+
+		order.Created_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		order.Updated_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+
+		order.ID = primitive.NewObjectID()
+		order.Order_id = order.ID.Hex()
+
+		result, insertErr := orderCollection.InsertOne(ctx, order)
+		if insertErr != nil {
+			msg := fmt.Sprintf("Order Item was not created")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
+			return
+		}
+		c.JSON(http.StatusOK, result)
 	}
 }
 
