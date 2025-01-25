@@ -32,6 +32,7 @@ func GetOrders() gin.HandlerFunc {
 			log.Fatal(err)
 		}
 		c.JSON(http.StatusOK, allOrders)
+
 	}
 }
 
